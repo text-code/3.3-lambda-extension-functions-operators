@@ -1,7 +1,7 @@
 import UserService.addChat
 import UserService.addMessage
 import UserService.getChats
-import UserService.getMessagesIsChat
+import UserService.getMessages
 import UserService.removeChat
 import UserService.removeMessage
 import org.junit.After
@@ -25,14 +25,14 @@ class UserServiceTest {
         userSecond.addMessage(user.id, "2 1")
         user.addMessage(userThird.id, "1 3")
 
-        val expected = mapOf(Pair(user.id, userSecond.id) to 2, Pair(user.id, userThird.id) to 1)
+        val expected = "Чат: (1, 2) непрочитанных сообщений: 2\nЧат: (1, 3) непрочитанных сообщений: 1"
 
         val actual = user.getChats()
         assertEquals(expected, actual)
     }
 
     @Test
-    fun getMessagesIsChat() {
+    fun getMessages() {
         val user = User(1, "user1")
         val userSecond = User(2, "user2")
         user.addMessage(userSecond.id, "(1 2) 1")
@@ -47,7 +47,7 @@ class UserServiceTest {
             Message(userSecond.id, "(2 1) 2")
         )
 
-        val actual = user.getMessagesIsChat(userSecond.id, 0, 4)
+        val actual = user.getMessages(userSecond.id, 0, 4)
         assertEquals(expected.size, actual.size)
     }
 
