@@ -12,9 +12,8 @@ object ChatService {
         chats.forEach { chat -> if (chat.key == key) chats.remove(key) }
     }
 
-    fun getChatList(user: User<Int, String>): Map<Pair<Int, Int>, MutableList<Message<Int, String>>> {
-        return chats.filterKeys { key -> key.first == user.id || key.second == user.id }
-    }
+    fun getChatList(user: User<Int, String>) =
+        chats.filterKeys { it.first == user.id || it.second == user.id }
 
     fun addMessage(writeId: Int, readId: Int, text: String) {
         val key = if (writeId < readId) Pair(writeId, readId) else Pair(readId, writeId)
@@ -28,13 +27,15 @@ object ChatService {
 
     fun removeMessage(firstId: Int, secondId: Int, messageId: Int) {
         val key = if (firstId < secondId) Pair(firstId, secondId) else Pair(firstId, secondId)
-        chats.onEach { (k, v) ->
-            if (k == key && v.size > 1 && v.size > messageId)
-                v.removeAt(messageId)
-            else if (v.size == 1)
-                chats.remove(key)
-            else throw NotFoundException("Message id not found")
-        }
+        chats
+            .filterKeys { it == key }
+            .onEach {
+                if (it.value.size > 1 && it.value.size > messageId)
+                    it.value.removeAt(messageId)
+                else if (it.value.size == 1)
+                    chats.remove(key)
+                else throw NotFoundException("Message id not found")
+            }
 
 //        when {
 //            (chats[key]!!.size > 1 && chats[key]!!.size > messageId) ->
