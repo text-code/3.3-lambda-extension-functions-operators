@@ -59,9 +59,11 @@ class UserServiceTest {
 
         val expected = "test"
 
-        val actual = ChatService.chats[Pair(user.id, userSecond.id)]!![0]
+        val actual = ChatService.chats[Pair(user.id, userSecond.id)]?.get(0)
 
-        assertEquals(expected, actual.text)
+        if (actual != null) {
+            assertEquals(expected, actual.text)
+        }
     }
 
     @Test
@@ -74,7 +76,7 @@ class UserServiceTest {
         val expected = 1
 
         user.removeMessage(userSecond.id, 0)
-        val actual = ChatService.chats[Pair(user.id, userSecond.id)]!!.size
+        val actual = ChatService.chats[Pair(user.id, userSecond.id)]?.size
 
         assertEquals(expected, actual)
 
@@ -92,7 +94,7 @@ class UserServiceTest {
 
         val expected = 1
 
-        val actual = ChatService.chats[Pair(user.id, userSecond.id)]!!.size
+        val actual = ChatService.chats[Pair(user.id, userSecond.id)]?.size
 
         assertEquals(expected, actual)
     }

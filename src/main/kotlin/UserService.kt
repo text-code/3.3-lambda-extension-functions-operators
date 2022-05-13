@@ -4,26 +4,9 @@ import ChatService.addMessage
 import ChatService.removeMessage
 import ChatService.addChat
 import ChatService.removeChat
-import UserService.addMessage
-import UserService.getChats
-import UserService.getMessages
 
 object UserService {
     fun User<Int, String>.getChats(): String {
-//        val chats = getChatList(this)
-
-//        val key = mutableMapOf<Pair<Int, Int>, Int>()
-//        var counter = 0
-//
-//        for (chat in chats) {
-//            for (message in chat.value) {
-//                if (!message.readability) counter++
-//            }
-//            key[chat.key] = counter
-//            counter = 0
-//        }
-//        return key
-
         return getChatList(this)
             .filterValues { (message) -> !message.readability }
             .toList()
@@ -37,20 +20,12 @@ object UserService {
         idLastReadMessage: Int,
         amountMessage: Int
     ): List<Message<Int, String>> =
-        chats[Pair(id, secondId)]!!
+        chats.getOrDefault(Pair(id, secondId), mutableListOf())
             .asSequence()
             .drop(idLastReadMessage)
             .take(amountMessage)
+            .onEach { it.readability = true }
             .toList()
-
-
-//        val chatList = chats[Pair(this.id, secondId)]
-//        val messageList = chatList!!.filterIndexed { index, message ->
-//            index in idLastReadMessage until amountMessage + idLastReadMessage
-//        }
-//        messageList.forEach { it.readability = true }
-//        return messageList
-
 
     fun User<Int, String>.addMessage(secondUserId: Int, text: String) {
         addMessage(id, secondUserId, text)

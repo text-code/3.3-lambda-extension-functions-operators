@@ -28,12 +28,20 @@ object ChatService {
 
     fun removeMessage(firstId: Int, secondId: Int, messageId: Int) {
         val key = if (firstId < secondId) Pair(firstId, secondId) else Pair(firstId, secondId)
-        when {
-            (chats[key]?.size!! > 1 && chats[key]?.size!! > messageId) ->
-                chats.forEach { (k, v) -> if (k == key) v.removeAt(messageId) }
-            (chats[key]?.size == 1) ->
+        chats.onEach { (k, v) ->
+            if (k == key && v.size > 1 && v.size > messageId)
+                v.removeAt(messageId)
+            else if (v.size == 1)
                 chats.remove(key)
-            else -> throw NotFoundException("Message id not found")
+            else throw NotFoundException("Message id not found")
         }
+
+//        when {
+//            (chats[key]!!.size > 1 && chats[key]!!.size > messageId) ->
+//                chats.forEach { (k, v) -> if (k == key) v.removeAt(messageId) }
+//            (chats[key]?.size == 1) ->
+//                chats.remove(key)
+//            else -> throw NotFoundException("Message id not found")
+//        }
     }
 }
