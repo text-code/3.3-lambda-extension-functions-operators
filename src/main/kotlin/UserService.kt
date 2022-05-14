@@ -4,17 +4,17 @@ import ChatService.addMessage
 import ChatService.removeMessage
 import ChatService.addChat
 import ChatService.removeChat
-import UserService.addMessage
-import UserService.getChats
-import UserService.getMessages
+//import UserService.addMessage
+//import UserService.getChats
+//import UserService.getMessages
 
 object UserService {
     fun User<Int, String>.getChats() =
         getChatList(this)
-            .filterValues { (message) -> !message.readability }
+            .filterValues { message -> message.any { !it.readability } }
             .toList()
             .joinToString("\n") { (key, value) ->
-                "Чат: $key непрочитанных сообщений: ${value.size}"
+                "Чат: $key непрочитанных сообщений: ${value.count { !it.readability }}"
             }
 
     fun User<Int, String>.getMessages(
@@ -47,17 +47,17 @@ object UserService {
 }
 
 
-fun main() {
-    val user = User(1, "user1")
-    val userSecond = User(2, "user2")
-    val userThread = User(3, "user3")
-    user.addMessage(userSecond.id, "(1 2) 1")
-    userSecond.addMessage(user.id, "(2 1) 1")
-    user.addMessage(userSecond.id, "(1 2) 2")
-    userSecond.addMessage(user.id, "(2 1) 2")
-    userThread.addMessage(user.id, "(3 1) 1")
-
-//    println(user.getMessages(userSecond.id, 0, 2))
-
-    println(user.getChats())
-}
+//fun main() {
+//    val user = User(1, "user1")
+//    val userSecond = User(2, "user2")
+//    val userThread = User(3, "user3")
+//    user.addMessage(userSecond.id, "(1 2) 1")
+//    userSecond.addMessage(user.id, "(2 1) 1")
+//    user.addMessage(userSecond.id, "(1 2) 2")
+//    userSecond.addMessage(user.id, "(2 1) 2")
+//    userThread.addMessage(user.id, "(3 1) 1")
+//
+//    println(user.getMessages(userSecond.id, 1, 3))
+//
+//    println(user.getChats())
+//}

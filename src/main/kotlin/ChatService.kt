@@ -27,15 +27,24 @@ object ChatService {
 
     fun removeMessage(firstId: Int, secondId: Int, messageId: Int) {
         val key = if (firstId < secondId) Pair(firstId, secondId) else Pair(firstId, secondId)
-        chats
-            .filterKeys { it == key }
-            .onEach {
-                if (it.value.size > 1 && it.value.size > messageId)
-                    it.value.removeAt(messageId)
-                else if (it.value.size == 1)
+
+        chats[key]?.let {
+                if (it.size > 1 && it.size > messageId)
+                    it.removeAt(messageId)
+                else if (it.size == 1)
                     chats.remove(key)
                 else throw NotFoundException("Message id not found")
-            }
+        }
+
+//        chats
+//            .filterKeys { it == key }
+//            .onEach {
+//                if (it.value.size > 1 && it.value.size > messageId)
+//                    it.value.removeAt(messageId)
+//                else if (it.value.size == 1)
+//                    chats.remove(key)
+//                else throw NotFoundException("Message id not found")
+//            }
 
 //        when {
 //            (chats[key]!!.size > 1 && chats[key]!!.size > messageId) ->
